@@ -1,0 +1,42 @@
+# config/rules.yaml
+
+# A whitelist of tools the agent is permitted to use.
+# Any tool not on this list will be blocked by the action guardrail.
+allowed_tools:
+  - "web_search"
+  - "calculator"
+  - "file_reader"
+  - "database_query"
+  - "creative_writing" # <-- ADD THIS NEW TOOL
+
+# Specific, fine-grained rules for individual tools.
+tool_rules:
+  # Rules for the 'file_reader' tool
+  file_reader:
+    # Agents can ONLY read files from these directories.
+    # This prevents them from accessing sensitive system files.
+    allowed_paths:
+      - "/data/public/"
+      - "/data/shared_documents/"
+      
+    # Agents are explicitly forbidden from reading files with these extensions.
+    disallowed_extensions:
+      - ".py"
+      - ".pyc"
+      - ".sh"
+      - ".bash"
+      - ".env"
+      - ".yaml"
+      - ".json"
+
+  # Rules for the 'database_query' tool
+  database_query:
+    # Forbids destructive SQL commands.
+    # The action guardrail will scan the query for these keywords.
+    forbidden_keywords:
+      - "DROP"
+      - "DELETE"
+      - "TRUNCATE"
+      - "UPDATE"
+      - "GRANT"
+      - "REVOKE"
